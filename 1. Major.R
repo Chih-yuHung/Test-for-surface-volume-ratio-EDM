@@ -6,7 +6,7 @@ temp.latitude<-c(20,30,40,50,60)
 ri<-27.5
 #To simulate various diameter/volume only
 for (l in 1:10) {
-    M.storage<-ri^2*pi*5*1.5*0.97^l
+    M.storage<-ri^2*pi*5*1.5*0.92^l
     source("2.Marco loop.R",echo = F)
 }
 
