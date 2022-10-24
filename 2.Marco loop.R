@@ -48,7 +48,7 @@ AirTmax1<-Envir.daily$AirTmax1[i]
 AirTmin1<-Envir.daily$AirTmin1[i]
 AirTmin2<-Envir.daily$AirTmin2[i]
 SR<-Envir.daily$SR[i]
-wind<-Envir.daily$wind[i]/3.6*1.5       #daily wind speed
+wind<-Envir.daily$wind[i]/3.6*1.0       #daily wind speed
 wind.v<-wind*4.87/(log(67.8*10-5.42)) #daily wind speed at 2m
 wind.f<-(2.36+1.67*wind.v)*Au^(-0.05) #wind function (for evaporation), mm/d/kPa, G16
 cc<-Envir.daily$cloud[i] #cloud clover

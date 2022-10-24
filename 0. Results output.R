@@ -8,7 +8,7 @@ for (i in 1:n) {
   temp50[[i]]<-read.csv(paste("result/Wind speed/50%/",temp[i],sep=""))
 }
 
-#Create a dataframe to store  80% results. 
+#Create a dataframe to store  50% results. 
 result50<-data.frame(ID=temp,maxtemp=c(1:n),mintemp=c(1:n),
                      surface=ri^2*pi,
                      maxvolume=c(1:n),minvolume=c(1:n),maxTa=c(1:n),
@@ -41,6 +41,21 @@ result150<-data.frame(ID=temp,maxtemp=c(1:n),mintemp=c(1:n),
                      surface=ri^2*pi,
                      maxvolume=c(1:n),minvolume=c(1:n),maxTa=c(1:n),
                      minTa=c(1:n))
+
+#Read results for 200%
+temp = list.files(path="result/Wind speed/200%",pattern="csv")
+n<-length(temp)
+temp200<-list()
+for (i in 1:n) {
+  temp200[[i]]<-read.csv(paste("result/Wind speed/200%/",temp[i],sep=""))
+}
+
+#Create a dataframe to store  150% results. 
+result200<-data.frame(ID=temp,maxtemp=c(1:n),mintemp=c(1:n),
+                      surface=ri^2*pi,
+                      maxvolume=c(1:n),minvolume=c(1:n),maxTa=c(1:n),
+                      minTa=c(1:n))
+
 
 #Obtain the warmest month: temperature and volume,50%
 for (i in 1:n) {
@@ -90,6 +105,23 @@ for (i in 1:n) {
 result150$SVratio.max<-result150$surface/result150$maxvolume
 result150$SVratio.min<-result150$surface/result150$minvolume
 
+#Obtain the warmest month: temperature and volume,200%
+for (i in 1:n) {
+  a<-tapply(temp200[[i]]$Temperature.C[731:1095]
+            ,temp200[[i]]$Month[731:1095],mean)
+  result200$maxtemp[i]<-max(a)
+  result200$mintemp[i]<-min(a)
+  
+  b<-tapply(temp200[[i]]$Volume.m3[731:1095]
+            ,temp200[[i]]$Month[731:1095],mean)
+  result200$maxvolume[i]<-b[a==max(a)]
+  result200$minvolume[i]<-b[a==min(a)]
+}
+
+result200$SVratio.max<-result200$surface/result200$maxvolume
+result200$SVratio.min<-result200$surface/result200$minvolume
+
+
 #To obtain air temperature
 Envir.daily<-read.csv("daily env input_RH.csv",header=T)
 Envir.daily$Tmean<-(Envir.daily$AirTmax1+Envir.daily$AirTmin1)/2
@@ -101,6 +133,8 @@ result100$maxTa<-max(Tmean.air)
 result100$minTa<-min(Tmean.air)
 result150$maxTa<-max(Tmean.air)
 result150$minTa<-min(Tmean.air)
+result200$maxTa<-max(Tmean.air)
+result200$minTa<-min(Tmean.air)
 
 
 #the difference between max Ta and max Tm, and min Ta and min Tm
@@ -110,14 +144,16 @@ result100$diff.max<-result100$maxtemp-result100$maxTa
 cor.test(result100$SVratio.max,result100$diff.max) # R = 0.99, P < 0.001
 result150$diff.max<-result150$maxtemp-result150$maxTa
 cor.test(result150$SVratio.max,result150$diff.max) # R = 0.99, P < 0.001
+result200$diff.max<-result200$maxtemp-result200$maxTa
+cor.test(result200$SVratio.max,result200$diff.max) # R = 0.99, P < 0.001
 
 result50.EDM<-result50
 result100.EDM<-result100
 result150.EDM<-result150
 
-save(result50.EDM,file="result50%_EDM")
-save(result100.EDM,file="result100%_EDM")
-save(result150.EDM,file="result150%_EDM")
+save(result50.EDM,file="result50%_EDM.rda")
+save(result100.EDM,file="result100%_EDM.rda")
+save(result150.EDM,file="result150%_EDM.rda")
 
 
 
